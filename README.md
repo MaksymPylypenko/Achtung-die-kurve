@@ -1,2 +1,2 @@
 # Curve
-Achtung, die Kurve! for a mobile platrform. 
+Achtung, die Kurve! for a mobile platform. 
