@@ -1,5 +1,5 @@
 # Curve
-Implementation of a popular online game Achtung, die Kurve! (aka Curve Fever) in Unity.
+Implementation of a popular online game **Achtung, die Kurve!** (aka Curve Fever) in `Unity`.
 
 MVP
 * [x] Ability to draw high quaity curves.
