@@ -1,4 +1,4 @@
-# Curve Fever (mobile & multiplayer)
+# Curve Fever (clone)
 Implementation of a popular online game **Achtung, die Kurve!** (aka Curve Fever) in `Unity`.
 
 MVP
