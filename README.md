@@ -1,4 +1,4 @@
-# Curve
+# Curve Fever (mobile & multiplayer)
 Implementation of a popular online game **Achtung, die Kurve!** (aka Curve Fever) in `Unity`.
 
 MVP
