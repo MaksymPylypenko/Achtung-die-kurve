@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class Snake : MonoBehaviour
 {
@@ -22,10 +23,7 @@ public class Snake : MonoBehaviour
     public float width = 0.3f;
 
     // gaps
-    public float lineTime = 3f;
-    public float breakTime = 0.45f;
-
-    System.Random rg;
+    public float breakTime = 0.40f;
     List<SnakeTail> snakeTails;
 
     // status
@@ -33,10 +31,8 @@ public class Snake : MonoBehaviour
     bool gameOver = false;
     bool isReady = false;
 
-
     void Awake()
     {
-        rg = new System.Random();
         snakeTails = new List<SnakeTail>();
     }
 
@@ -62,16 +58,11 @@ public class Snake : MonoBehaviour
     {
         while (!gameOver)
         {
-            float randomLineTime = (float)rg.NextDouble() - 0.5f;
-            yield return new WaitForSeconds(lineTime + randomLineTime);
-
+            yield return new WaitForSeconds(Random.Range(0.1f, 7.0f));
             tailActive = false;
-
-            float randomBreakTime = (float)rg.NextDouble() * (breakTime * 0.5f) - (breakTime * 0.5f);
-            yield return new WaitForSeconds(breakTime + randomBreakTime);
-
+        
+            yield return new WaitForSeconds(breakTime);
             AddTail();
-
             tailActive = true;
         }
     }
@@ -96,7 +87,6 @@ public class Snake : MonoBehaviour
         if (tailActive)
         {
             GetCurrentSnakeTail().UpdateTail(headPosition);
-            //GetCurrentSnakeTail().UpdateTail(transform.position);
         }
     }
 
@@ -117,8 +107,9 @@ public class Snake : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("Collision detected");
-        //GameOver();
+        Debug.Log("Collision at "+col);
+        GameOver();
+        SceneManager.LoadScene(0);
     }
 
 
@@ -139,39 +130,57 @@ public class Snake : MonoBehaviour
 
     float GetSteerDirection()
     {
-        if (snakeID == 0)
-        {
-            if (Input.GetKey(KeyCode.A))
-            {
-                return 1f;
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                return -1f;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+        //if (Input.touchCount > 0)
+        //{
+        //    var touch = Input.GetTouch(0);
+        //    if (touch.position.x < Screen.width / 2)
+        //    {
+        //        Debug.Log("Left click");
+        //        return 1.0f;
+        //    }
+        //    else if (touch.position.x > Screen.width / 2)
+        //    {
+        //        Debug.Log("Right click");
+        //        return -1.0f;
+        //    }
+        //}
+        //return 0;
 
-        if (snakeID == 1)
-        {
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                return 1f;
-            }
-            else if (Input.GetKey(KeyCode.RightArrow))
-            {
-                return -1f;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+        return -Input.GetAxisRaw("Horizontal");
 
-        return 0;
+        //if (snakeID == 0)
+        //{
+        //    if (Input.GetKey(KeyCode.A))
+        //    {
+        //        return 1f;
+        //    }
+        //    else if (Input.GetKey(KeyCode.D))
+        //    {
+        //        return -1f;
+        //    }
+        //    else
+        //    {
+        //        return 0;
+        //    }
+        //}
+
+        //if (snakeID == 1)
+        //{
+        //    if (Input.GetKey(KeyCode.LeftArrow))
+        //    {
+        //        return 1f;
+        //    }
+        //    else if (Input.GetKey(KeyCode.RightArrow))
+        //    {
+        //        return -1f;
+        //    }
+        //    else
+        //    {
+        //        return 0;
+        //    }
+        //}
+
+        //return 0;
     }
 
     SnakeTail GetCurrentSnakeTail()

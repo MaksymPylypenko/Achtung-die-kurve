@@ -11,12 +11,19 @@ public class Manager : MonoBehaviour
 
     List<Snake> snakes;
 
+    //public GameObject RestartButton;
+
+    void Awake()
+    {
+        //RestartButton = GetComponent<GameObject>();
+    }
+
     void Start()
     {
         snakes = new List<Snake>();
 
         AddSnake(0, Vector3.left, 90f);
-        //AddSnake(1, Vector3.right, 90f);
+        AddSnake(1, Vector3.right, 90f);
 
         for (int i = 0; i < snakes.Count; i++)
         {
