@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Manager : MonoBehaviour
 {
-
     public Snake snakePrefab;
 
     public Color[] snakeColors;
@@ -23,12 +22,14 @@ public class Manager : MonoBehaviour
         snakes = new List<Snake>();
 
         AddSnake(0, Vector3.left, 90f);
-        AddSnake(1, Vector3.right, 90f);
+        //AddSnake(1, Vector3.right, 90f);
 
         for (int i = 0; i < snakes.Count; i++)
         {
             snakes[i].StartSnake();
         }
+
+        FollowSnake(0);
     }
 
     void AddSnake(int snakeID, Vector3 headPosition, float headAngle)
@@ -42,4 +43,9 @@ public class Manager : MonoBehaviour
         snakes.Add(snake);
     }
 
+    void FollowSnake(int snakeID)
+    {
+        Camera.main.GetComponent<CameraFollow>().setTarget(snakes[snakeID].transform);
+        //cameraMovement.snake = snakes[0];
+    }
 }

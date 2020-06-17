@@ -8,7 +8,7 @@ using System.Linq;
 [RequireComponent(typeof(EdgeCollider2D))]
 public class SnakeTail : MonoBehaviour {
 
-    public float pointSpacing = .1f;
+    //public float pointSpacing = .1f;
 
     LineRenderer line;
     EdgeCollider2D edgeCollider;
