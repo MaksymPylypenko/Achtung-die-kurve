@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Snake : MonoBehaviour
 {
+
     // unique for each snake
     public int snakeID;
     public Color color;
@@ -17,52 +18,111 @@ public class Snake : MonoBehaviour
     public float headAngle;
     public Vector3 headPosition;
 
+    // frequency of points
+    public Vector3 prevPosition;
+    public float pointSpacing = 0.5f;
+
     // properties
-    public float speed = 3f;
+    public float speed = 0.1f;
     public float angularSpeed = 4f;       
     public float width = 0.3f;
 
     // gaps
-    public float breakTime = 0.40f;
+    public float shiftTime = 0.10f; // the time it takes for a circle to leave the edge collider
+    public float breakTime = 0.30f;
     List<SnakeTail> snakeTails;
 
     // status
     bool tailActive = true;
     bool gameOver = false;
     bool isReady = false;
+    bool checkCollision = true;
+
+    // 
+    MeshRenderer meshRenderer;
+    MeshFilter meshFilter;
+    CircleCollider2D col;
+    Mesh mesh;
 
     void Awake()
     {
-        snakeTails = new List<SnakeTail>();
+        snakeTails = new List<SnakeTail>();      
+
+        meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        meshFilter = gameObject.GetComponent<MeshFilter>();
+        col = gameObject.GetComponent<CircleCollider2D>();
+        //col.radius = width / 2.0f -0.1f;
+        //pointSpacing = width / 3.2f; // ??
+
+        float w = width -0.01f;
+        Mesh mesh = new Mesh();
+        Vector3[] vertices = new Vector3[4]
+        {
+            new Vector3(-w, -w, 0),
+            new Vector3(w, -w, 0),
+            new Vector3(-w, w, 0),
+            new Vector3(w, w, 0)
+        };
+        mesh.vertices = vertices;
+
+        int[] tris = new int[6]
+        {
+            // lower left triangle
+            0, 2, 1,
+            // upper right triangle
+            2, 3, 1
+        };
+        mesh.triangles = tris;
+
+        Vector2[] uv = new Vector2[4]
+        {
+            new Vector2(0, 0),
+            new Vector2(1, 0),
+            new Vector2(0, 1),
+            new Vector2(1, 1)
+        };
+        mesh.uv = uv;
+        meshFilter.mesh = mesh;
     }
 
-     
+
     public void StartSnake()
     {
-        AddTail();
+        meshRenderer.material.color = new Vector4(color[0], color[1], color[2], 1.0f);
+        AddTail();    
         StartCoroutine(TailDrawer());
         isReady = true;
+        prevPosition = new Vector3(-99, -99, 0);
     }
 
     void AddTail()
     {
         SnakeTail tail = Instantiate(tailPrefab, Vector3.zero, Quaternion.identity) as SnakeTail;
         tail.SetColor(color);
-        tail.SetWidth(width);
-
+        tail.SetWidth(width);       
         snakeTails.Add(tail);
     }
 
 
     IEnumerator TailDrawer()
     {
+        tailActive = false;
+        checkCollision = false;
+        yield return new WaitForSeconds(5.0f);
+        tailActive = true;
+        checkCollision = true;
+
         while (!gameOver)
         {
             yield return new WaitForSeconds(Random.Range(0.1f, 7.0f));
             tailActive = false;
-        
+
+            yield return new WaitForSeconds(shiftTime);
+            snakeTails[snakeTails.Count - 1].AdjustCollider();
+
             yield return new WaitForSeconds(breakTime);
             AddTail();
+
             tailActive = true;
         }
     }
@@ -86,7 +146,12 @@ public class Snake : MonoBehaviour
 
         if (tailActive)
         {
-            GetCurrentSnakeTail().UpdateTail(headPosition);
+            if (Vector3.Distance(prevPosition, headPosition) >= pointSpacing)
+            {
+                GetCurrentSnakeTail().UpdateTail(headPosition);
+                prevPosition = headPosition;
+            }
+
         }
     }
 
@@ -97,7 +162,7 @@ public class Snake : MonoBehaviour
         if (gameOver || !isReady)
         {
             return;
-        }
+        }  
 
         head.position = headPosition;
         head.localRotation = Quaternion.Euler(0, 0, headAngle); 
@@ -107,24 +172,31 @@ public class Snake : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("Collision at "+col);
-        GameOver();
-        SceneManager.LoadScene(0);
+        if (checkCollision)
+        {
+            Debug.Log("Collision at " + col.transform.position);
+            StartCoroutine(GameOver());
+        }
+        
     }
 
 
-    void GameOver()
+    IEnumerator GameOver()
     {
         gameOver = true;
+        yield return new WaitForSeconds(1);
 
-        for (int i = 0; i < snakeTails.Count; i++)
-        {
-            GameObject.Destroy(snakeTails[i].gameObject);
-        }
+        gameOver = false;
 
-        snakeTails.Clear();
+        //for (int i = 0; i < snakeTails.Count; i++)
+        //{
+        //    GameObject.Destroy(snakeTails[i].gameObject);
+        //}
 
-        GameObject.Destroy(head.gameObject);
+        //snakeTails.Clear();
+
+        //GameObject.Destroy(head.gameObject);
+        //SceneManager.LoadScene(0);
     }
 
 

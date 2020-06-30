@@ -6,7 +6,7 @@ public class Manager : MonoBehaviour
 {
     public Snake snakePrefab;
 
-    public Color[] snakeColors;
+    public Color[] snakeColors = { Color.green, Color.yellow, Color.white, Color.blue, Color.yellow };
 
     List<Snake> snakes;
 
@@ -22,7 +22,7 @@ public class Manager : MonoBehaviour
         snakes = new List<Snake>();
 
         AddSnake(0, Vector3.left, 90f);
-        //AddSnake(1, Vector3.right, 90f);
+        //AddSnake(1, Vector3.right, 45f);
 
         for (int i = 0; i < snakes.Count; i++)
         {
@@ -45,7 +45,6 @@ public class Manager : MonoBehaviour
 
     void FollowSnake(int snakeID)
     {
-        Camera.main.GetComponent<CameraFollow>().setTarget(snakes[snakeID].transform);
-        //cameraMovement.snake = snakes[0];
+        Camera.main.GetComponent<CameraFollow>().setTarget(snakes[snakeID]);
     }
 }

@@ -2,17 +2,18 @@
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform snake;
+    public Snake snake;
 
-    void Update()
+    void FixedUpdate()
     {
         if (snake != null)
         {
-            transform.position = new Vector3(snake.position.x, snake.position.y, transform.position.z);
+            transform.position = new Vector3(snake.head.position.x, snake.head.position.y, transform.position.z);
+            transform.localRotation = Quaternion.Euler(0, 0, snake.headAngle - 90f);
         }
     }
 
-    public void setTarget(Transform target)
+    public void setTarget(Snake target)
     {
         snake = target;
     }

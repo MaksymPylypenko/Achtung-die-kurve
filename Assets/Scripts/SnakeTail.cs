@@ -8,8 +8,6 @@ using System.Linq;
 [RequireComponent(typeof(EdgeCollider2D))]
 public class SnakeTail : MonoBehaviour {
 
-    //public float pointSpacing = .1f;
-
     LineRenderer line;
     EdgeCollider2D edgeCollider;
 
@@ -38,26 +36,29 @@ public class SnakeTail : MonoBehaviour {
         line.endWidth = width;
     }
 
-    //Vector3.Distance(linePoints.Last(), position) > pointSpacing;
-    
-
+  
     public void UpdateTail(Vector2 position)
     {
         //if (linePoints.Count > 1)
         //{
         //    edgeCollider.points = linePoints.ToArray<Vector2>();
         //}
-           
+
         linePoints.Add(position);
         line.positionCount = linePoints.Count;
         line.SetPosition(linePoints.Count - 1, linePoints[linePoints.Count - 1]);
 
-        if (linePoints.Count > 6)
+
+        if (linePoints.Count > 2)
         {
-            var edgePoints = linePoints.Take(linePoints.Count - 6);
+            var edgePoints = linePoints.Take(linePoints.Count - 2);
             edgeCollider.points = edgePoints.ToArray<Vector2>();
         }
-        
+    }
+
+    public void AdjustCollider()
+    {
+        edgeCollider.points = linePoints.ToArray<Vector2>();
     }
 
 }
