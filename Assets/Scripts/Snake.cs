@@ -28,7 +28,6 @@ public class Snake : MonoBehaviour
     public float width = 0.3f;
 
     // gaps
-    public float shiftTime = 0.10f; // the time it takes for a circle to leave the edge collider
     public float breakTime = 0.30f;
     List<SnakeTail> snakeTails;
 
@@ -36,7 +35,6 @@ public class Snake : MonoBehaviour
     bool tailActive = true;
     bool gameOver = false;
     bool isReady = false;
-    bool checkCollision = true;
 
     // 
     MeshRenderer meshRenderer;
@@ -51,10 +49,10 @@ public class Snake : MonoBehaviour
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
         meshFilter = gameObject.GetComponent<MeshFilter>();
         col = gameObject.GetComponent<CircleCollider2D>();
-        //col.radius = width / 2.0f -0.1f;
+        col.radius = width / 2.0f;
         //pointSpacing = width / 3.2f; // ??
 
-        float w = width -0.01f;
+        float w = width/2.0f + 0.01f;
         Mesh mesh = new Mesh();
         Vector3[] vertices = new Vector3[4]
         {
@@ -107,17 +105,14 @@ public class Snake : MonoBehaviour
     IEnumerator TailDrawer()
     {
         tailActive = false;
-        checkCollision = false;
         yield return new WaitForSeconds(5.0f);
         tailActive = true;
-        checkCollision = true;
 
         while (!gameOver)
         {
             yield return new WaitForSeconds(Random.Range(0.1f, 7.0f));
             tailActive = false;
 
-            yield return new WaitForSeconds(shiftTime);
             snakeTails[snakeTails.Count - 1].AdjustCollider();
 
             yield return new WaitForSeconds(breakTime);
@@ -172,7 +167,7 @@ public class Snake : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (checkCollision)
+        if (tailActive)
         {
             Debug.Log("Collision at " + col.transform.position);
             StartCoroutine(GameOver());

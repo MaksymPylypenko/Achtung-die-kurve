@@ -55,12 +55,11 @@ MonoBehaviour:
   headAngle: 0
   headPosition: {x: 0, y: 0, z: 0}
   prevPosition: {x: 0, y: 0, z: 0}
-  pointSpacing: 0.1
+  pointSpacing: 0.07
   speed: 2
   angularSpeed: 2
   width: 0.3
-  shiftTime: 0.1
-  breakTime: 0.3
+  breakTime: 0.4
 --- !u!58 &550964567216705943
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -117,7 +116,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 59c3180c5bc93fb48931f904f368dd30, type: 2}
+  - {fileID: 2100000, guid: cdf8697f24a0e7549811adbb729dff58, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
