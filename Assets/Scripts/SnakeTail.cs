@@ -11,7 +11,7 @@ public class SnakeTail : MonoBehaviour {
     //MeshCollider meshCollider;
 
     List<Vector2> linePoints;
-    int ignoredPoints = 6;
+    public int offset = 6;
 
     void Awake()
     {
@@ -38,6 +38,10 @@ public class SnakeTail : MonoBehaviour {
         lineRenderer.endWidth = width;
     }
 
+    public void SetOffset(int i)
+    {
+        offset = i;
+    }
   
     public void UpdateTail(Vector2 position)
     {
@@ -56,9 +60,9 @@ public class SnakeTail : MonoBehaviour {
         //lineRenderer.BakeMesh(mesh, true);
         //meshCollider.sharedMesh = mesh;
 
-        if (linePoints.Count > ignoredPoints)
+        if (linePoints.Count > offset)
         {
-            var edgePoints = linePoints.Take(linePoints.Count - ignoredPoints);
+            var edgePoints = linePoints.Take(linePoints.Count - offset);
             edgeCollider.points = edgePoints.ToArray<Vector2>();
         }
     }

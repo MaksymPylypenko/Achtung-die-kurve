@@ -52,6 +52,8 @@ public class Snake : MonoBehaviour
         col.radius = width / 2.0f;
         //pointSpacing = width / 3.2f; // ??
 
+        breakTime = width;
+
         float w = width/2.0f + 0.01f;
         Mesh mesh = new Mesh();
         Vector3[] vertices = new Vector3[4]
@@ -97,7 +99,8 @@ public class Snake : MonoBehaviour
     {
         SnakeTail tail = Instantiate(tailPrefab, Vector3.zero, Quaternion.identity) as SnakeTail;
         tail.SetColor(color);
-        tail.SetWidth(width);       
+        tail.SetWidth(width);
+        tail.SetOffset((int)(width * 15));
         snakeTails.Add(tail);
     }
 
