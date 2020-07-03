@@ -11,8 +11,8 @@ public class Walls : MonoBehaviour
 
     
 
-    public float x = 10f;
-    public float y = 10f;
+    public float x = 4f;
+    public float y = 4f;
 
     LineRenderer line;
     EdgeCollider2D edgeCollider;

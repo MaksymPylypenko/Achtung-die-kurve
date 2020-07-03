@@ -8,7 +8,6 @@ public class SnakeTail : MonoBehaviour {
 
     LineRenderer lineRenderer;
     EdgeCollider2D edgeCollider;
-    //MeshCollider meshCollider;
 
     List<Vector2> linePoints;
     public int offset = 6;
@@ -33,7 +32,7 @@ public class SnakeTail : MonoBehaviour {
 
     public void SetWidth(float width)
     {
-        edgeCollider.edgeRadius = width / 2.0f - 0.1f;
+        edgeCollider.edgeRadius = width / 2.0f - 0.05f * width;
         lineRenderer.startWidth = width;
         lineRenderer.endWidth = width;
     }

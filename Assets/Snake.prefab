@@ -55,11 +55,11 @@ MonoBehaviour:
   headAngle: 0
   headPosition: {x: 0, y: 0, z: 0}
   prevPosition: {x: 0, y: 0, z: 0}
-  pointSpacing: 0.1
+  pointSpacing: 0.16
   speed: 2
   angularSpeed: 2
-  width: 0.7
-  breakTime: 0.4
+  width: 0.3
+  breakTime: 0.42
 --- !u!58 &550964567216705943
 CircleCollider2D:
   m_ObjectHideFlags: 0

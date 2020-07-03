@@ -35,6 +35,7 @@ public class Snake : MonoBehaviour
     bool tailActive = true;
     bool gameOver = false;
     bool isReady = false;
+    bool isCollision = false;
 
     // 
     MeshRenderer meshRenderer;
@@ -52,7 +53,7 @@ public class Snake : MonoBehaviour
         col.radius = width / 2.0f;
         //pointSpacing = width / 3.2f; // ??
 
-        breakTime = width;
+        breakTime = width*1.5f;
 
         float w = width/2.0f + 0.01f;
         Mesh mesh = new Mesh();
@@ -108,20 +109,28 @@ public class Snake : MonoBehaviour
     IEnumerator TailDrawer()
     {
         tailActive = false;
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(2.0f);
         tailActive = true;
 
         while (!gameOver)
         {
             yield return new WaitForSeconds(Random.Range(0.1f, 7.0f));
             tailActive = false;
-
-            snakeTails[snakeTails.Count - 1].AdjustCollider();
-
+                      
             yield return new WaitForSeconds(breakTime);
+
+            if (isCollision)
+            {
+                StartCoroutine(GameOver());
+                Debug.Log("Edge case");
+            }
+
             AddTail();
+            snakeTails[snakeTails.Count - 2].AdjustCollider(); // remove offset in the previous tail
 
             tailActive = true;
+
+           
         }
     }
 
@@ -167,12 +176,18 @@ public class Snake : MonoBehaviour
     }
 
 
-
-    void OnTriggerEnter2D(Collider2D col)
+    void OnTriggerExit2D(Collider2D other)
     {
+        isCollision = false;
+        Debug.Log("CollisionExit");        
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        isCollision = true;
         if (tailActive)
         {
-            Debug.Log("Collision at " + col.transform.position);
+            Debug.Log("Collision at " + other.transform.position);
             StartCoroutine(GameOver());
         }
         
@@ -183,7 +198,6 @@ public class Snake : MonoBehaviour
     {
         gameOver = true;
         yield return new WaitForSeconds(1);
-
         gameOver = false;
 
         //for (int i = 0; i < snakeTails.Count; i++)
@@ -200,19 +214,23 @@ public class Snake : MonoBehaviour
 
     float GetSteerDirection()
     {
+
         //if (Input.touchCount > 0)
         //{
         //    var touch = Input.GetTouch(0);
-        //    if (touch.position.x < Screen.width / 2)
-        //    {
-        //        Debug.Log("Left click");
-        //        return 1.0f;
-        //    }
-        //    else if (touch.position.x > Screen.width / 2)
-        //    {
-        //        Debug.Log("Right click");
-        //        return -1.0f;
-        //    }
+        //    if (Screen.orientation == ScreenOrientation.Portrait)
+        //    {                
+        //        if (touch.position.x < Screen.width / 2)
+        //        {
+        //            Debug.Log("Left click");
+        //            return 1.0f;
+        //        }
+        //        else if (touch.position.x > Screen.width / 2)
+        //        {
+        //            Debug.Log("Right click");
+        //            return -1.0f;
+        //        }
+        //    }               
         //}
         //return 0;
 
