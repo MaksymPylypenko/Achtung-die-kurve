@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Snake : MonoBehaviour
 {
+    public SnakeBrain controller;
 
     // unique for each snake
     public int snakeID;
@@ -43,19 +44,9 @@ public class Snake : MonoBehaviour
     CircleCollider2D col;
     Mesh mesh;
 
-    void Awake()
+    void setCircle()
     {
-        snakeTails = new List<SnakeTail>();      
-
-        meshRenderer = gameObject.GetComponent<MeshRenderer>();
-        meshFilter = gameObject.GetComponent<MeshFilter>();
-        col = gameObject.GetComponent<CircleCollider2D>();
-        col.radius = width / 2.0f;
-        //pointSpacing = width / 3.2f; // ??
-
-        breakTime = width*1.5f;
-
-        float w = width/2.0f + 0.01f;
+        float w = width / 2.0f + 0.01f;
         Mesh mesh = new Mesh();
         Vector3[] vertices = new Vector3[4]
         {
@@ -84,6 +75,20 @@ public class Snake : MonoBehaviour
         };
         mesh.uv = uv;
         meshFilter.mesh = mesh;
+    }
+
+    void Awake()
+    {
+        snakeTails = new List<SnakeTail>();      
+
+        meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        meshFilter = gameObject.GetComponent<MeshFilter>();
+        col = gameObject.GetComponent<CircleCollider2D>();
+        col.radius = width / 2.0f;
+        //pointSpacing = width / 3.2f; // ??
+
+        breakTime = width*1.5f;
+        setCircle();
     }
 
 
@@ -212,63 +217,9 @@ public class Snake : MonoBehaviour
     }
 
 
-    float GetSteerDirection()
+    float GetSteerDirection() // This should depend on the current player controlling the snake..
     {
-
-        //if (Input.touchCount > 0)
-        //{
-        //    var touch = Input.GetTouch(0);
-        //    if (Screen.orientation == ScreenOrientation.Portrait)
-        //    {                
-        //        if (touch.position.x < Screen.width / 2)
-        //        {
-        //            Debug.Log("Left click");
-        //            return 1.0f;
-        //        }
-        //        else if (touch.position.x > Screen.width / 2)
-        //        {
-        //            Debug.Log("Right click");
-        //            return -1.0f;
-        //        }
-        //    }               
-        //}
-        //return 0;
-
-        return -Input.GetAxisRaw("Horizontal");
-
-        //if (snakeID == 0)
-        //{
-        //    if (Input.GetKey(KeyCode.A))
-        //    {
-        //        return 1f;
-        //    }
-        //    else if (Input.GetKey(KeyCode.D))
-        //    {
-        //        return -1f;
-        //    }
-        //    else
-        //    {
-        //        return 0;
-        //    }
-        //}
-
-        //if (snakeID == 1)
-        //{
-        //    if (Input.GetKey(KeyCode.LeftArrow))
-        //    {
-        //        return 1f;
-        //    }
-        //    else if (Input.GetKey(KeyCode.RightArrow))
-        //    {
-        //        return -1f;
-        //    }
-        //    else
-        //    {
-        //        return 0;
-        //    }
-        //}
-
-        //return 0;
+        return controller.Move();
     }
 
     SnakeTail GetCurrentSnakeTail()

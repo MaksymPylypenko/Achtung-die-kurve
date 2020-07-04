@@ -418,6 +418,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snakePrefab: {fileID: 8134448062885496020, guid: 8293bcb2fab356f4dab396e1d3dfb563,
     type: 3}
+  randomAIPrefab: {fileID: 164260020060518609, guid: 030d4e63041467b42a824c799d96baa0,
+    type: 3}
   snakeColors:
   - {r: 0, g: 0.9411765, b: 1, a: 0}
   - {r: 1, g: 0, b: 0.5411765, a: 0}
