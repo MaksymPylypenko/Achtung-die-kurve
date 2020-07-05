@@ -1,13 +1,10 @@
-# Curve Fever (clone)
-Implementation of a popular online game **Achtung, die Kurve!** (aka Curve Fever) in `Unity`.
+# Achtung die kurve! (clone)
+A snake like game where you goal is to outlive or kill the opponent.
 
-MVP
-* [x] Ability to draw high quaity curves.
-* [x] Curves make gaps a random intervals (in proggress).
-* [x] Collision detection (in proggress).
-* [ ] Menu
-
-Other things to-do
-* [ ] Power-ups 
+TO-DO
+* [x] High quality & efficient renderer.
+* [ ] Correct collision detection
+* [ ] AI enemy
+* [ ] Power-ups that change the mechanics of a snake & environment
 * [ ] Multiplayer
-* [ ] Custom modes
+
