@@ -10,13 +10,13 @@ public class SnakeTail : MonoBehaviour {
     EdgeCollider2D edgeCollider;
 
     List<Vector2> linePoints;
-    public int offset = 6;
+    public int offset = 2;
 
     void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 0;
-        lineRenderer.useWorldSpace = true;
+        lineRenderer.useWorldSpace = false;
 
         linePoints = new List<Vector2>();
 
@@ -42,6 +42,11 @@ public class SnakeTail : MonoBehaviour {
         offset = i;
     }
   
+    public void Destroy()
+    {
+        Object.Destroy(gameObject);
+    }
+
     public void UpdateTail(Vector2 position)
     {
         // Should move collider to left and right? 

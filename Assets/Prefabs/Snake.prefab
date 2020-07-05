@@ -47,6 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f41664cf838e75c41b29f5bfe6a13e59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
+  map: {fileID: 0}
   snakeID: 0
   color: {r: 1, g: 1, b: 1, a: 1}
   head: {fileID: 550964567216705941}
@@ -54,7 +59,6 @@ MonoBehaviour:
     type: 3}
   headAngle: 0
   headPosition: {x: 0, y: 0, z: 0}
-  prevPosition: {x: 0, y: 0, z: 0}
   pointSpacing: 0.16
   speed: 2
   angularSpeed: 2

@@ -8,12 +8,6 @@ using System.Linq;
 [RequireComponent(typeof(EdgeCollider2D))]
 public class Walls : MonoBehaviour
 {
-
-    
-
-    public float x = 4f;
-    public float y = 4f;
-
     LineRenderer line;
     EdgeCollider2D edgeCollider;
 
@@ -21,14 +15,10 @@ public class Walls : MonoBehaviour
     void Awake()
     {
         line = GetComponent<LineRenderer>();
-        edgeCollider = GetComponent<EdgeCollider2D>();
-
-        SetWalls();
-
-      
+        edgeCollider = GetComponent<EdgeCollider2D>();  
     }
 
-    void SetWalls()
+    public void SetWalls(float x, float y)
     {
         // Line renderer requires 3d points.
         Vector3[] points3d = new Vector3[5];
@@ -50,5 +40,12 @@ public class Walls : MonoBehaviour
         edgeCollider.points = points2d;
 
         // Is there a better way ?
+    }
+
+    public void SetWidth(float w)
+    {
+        edgeCollider.edgeRadius = w/2.0f;
+        line.startWidth = w;
+        line.endWidth = w;
     }
 }
