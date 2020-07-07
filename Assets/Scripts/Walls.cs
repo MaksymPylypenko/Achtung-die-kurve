@@ -4,8 +4,6 @@ using UnityEngine;
 using System.Linq;
 
 
-[RequireComponent(typeof(LineRenderer))]
-[RequireComponent(typeof(EdgeCollider2D))]
 public class Walls : MonoBehaviour
 {
     LineRenderer line;
@@ -18,11 +16,14 @@ public class Walls : MonoBehaviour
         edgeCollider = GetComponent<EdgeCollider2D>();  
     }
 
-    public void SetWalls(float x, float y)
+    public void SetWalls(float range, float width)
     {
+        float x = range;
+        float y = range;
+
         // Line renderer requires 3d points.
         Vector3[] points3d = new Vector3[5];
-        points3d[0] = new Vector3(-x, -y, 0f);
+        points3d[0] = new Vector3(-x-width/2, -y, 0f);
         points3d[1] = new Vector3(x, -y, 0f);
         points3d[2] = new Vector3(x, y, 0f);
         points3d[3] = new Vector3(-x, y, 0f);
@@ -40,12 +41,10 @@ public class Walls : MonoBehaviour
         edgeCollider.points = points2d;
 
         // Is there a better way ?
-    }
 
-    public void SetWidth(float w)
-    {
-        edgeCollider.edgeRadius = w/2.0f;
-        line.startWidth = w;
-        line.endWidth = w;
+        edgeCollider.edgeRadius = width / 2.0f;
+        line.startWidth = width;
+        line.endWidth = width;
+
     }
 }

@@ -18,8 +18,7 @@ public class CameraFollow : MonoBehaviour
             if (followDirection)
             {
                transform.localRotation = snake.transform.localRotation;
-            }
-            
+            }            
         }
     }
 

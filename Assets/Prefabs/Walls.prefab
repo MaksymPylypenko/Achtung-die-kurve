@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1543195282220255031}
   - component: {fileID: 1543195282220255028}
-  - component: {fileID: 1543195282220255025}
   - component: {fileID: 1543195282220255030}
+  - component: {fileID: 162561442712562073}
   m_Layer: 0
   m_Name: Walls
   m_TagString: Untagged
@@ -126,15 +126,27 @@ LineRenderer:
       m_Mode: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 5
-    numCapVertices: 5
+    numCornerVertices: 0
+    numCapVertices: 0
     alignment: 0
     textureMode: 1
     shadowBias: 0
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
---- !u!68 &1543195282220255025
+--- !u!114 &1543195282220255030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1543195282220255029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a3fc08506938bc439d244cbbc600374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!68 &162561442712562073
 EdgeCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,7 +160,7 @@ EdgeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0.07
+  m_EdgeRadius: 0.3
   m_Points:
   - {x: -10, y: -10}
   - {x: 10, y: -10}
@@ -159,15 +171,3 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
---- !u!114 &1543195282220255030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1543195282220255029}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a3fc08506938bc439d244cbbc600374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

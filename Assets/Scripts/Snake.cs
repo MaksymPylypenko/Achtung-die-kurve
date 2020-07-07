@@ -2,36 +2,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using Unity.MLAgents.Policies;
 
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
-//using System.Diagnostics;
+
+//using UnityEngine.Serialization;
+
+//var enumModeStatus : BehaviorType.HeuristicOnly;
+
 
 public class Snake : Agent
-{  
-    float direction = 0.0f;
-    float speed = 2.0f;
-    float angularSpeed = 110.0f;
-    float width = 0.3f;
-    float breakTime = 0.42f;
-    float shiftTime = 0.7f;
-    float pointSpacing = 0.16f;
+{
 
-    bool tailActive = true;
-    bool gameOver = false;
-    bool isReady = false;
+
+    float direction = 0.0f;         // user's input
+    float speed = 2.0f;             // speed of snake's head
+    float angularSpeed = 110.0f;    // determines the smallest circle that a snake can draw
+    float width = 0.3f;             // width of head & tail
+    float breakTime = 0.42f;        // the length of a gap between tails
+    float shiftTime = 0.7f;         // delay before drawing the 1st tail
+    float pointSpacing = 0.16f;     // allows to reduce the number of primitives in the tail (better performance)
+
+    public int score = 0;
+
+    bool tailActive = false;
+    bool isAlive = true;
     bool isCollision = false;
 
     List<SnakeTail> snakeTails;
 
-    public Color color;
-    public SnakeBrain controller;
-    public SnakeTail tailPrefab;
-    public GameObject map;
-
-    Coroutine thread;
-    Vector3 initPosition;
+    Vector3 originalPosition;
     Vector3 prevPosition;
+    Quaternion originalRotation;
+    Transform enemy;
+
+    public int snakeID;   
+    private Color color;
+    public SnakeTail tailPrefab;
+    public AchtungArea map;
+
+    Coroutine thread; 
+
     CircleCollider2D col;
     Mesh mesh;
     MeshRenderer meshRenderer;
@@ -46,35 +58,110 @@ public class Snake : Agent
         meshFilter = gameObject.GetComponent<MeshFilter>();
         col = gameObject.GetComponent<CircleCollider2D>();
         snakeTails = new List<SnakeTail>();
-
-        meshRenderer.material.color = new Vector4(color[0], color[1], color[2], 1.0f);
+       
         makePolygon();       
         col.radius = width / 2.0f;
         breakTime = width * 1.5f;
-        initPosition = transform.position;
         //pointSpacing = width / 3.2f; // ??
     }
 
+
+    public void setColor(Color c)
+    {
+        color = c;
+        meshRenderer.material.color = new Vector4(color[0], color[1], color[2], 1.0f);
+    }
+
+
+    public void setPosition(float x, float y, float angle)
+    {
+        transform.Rotate(0f, 0f, angle);
+        transform.Translate(x, y, 0.0f);
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+    }
+
+    
+    public void setRandomPosition()
+    {
+        transform.position = map.transform.position;
+
+        float angle = Random.Range(0.0f, 360.0f);
+        float d = map.spawnRange;
+        float x = Random.Range(-d, d);
+        float y = Random.Range(-d, d);
+
+        transform.Rotate(0f, 0f, angle);
+        transform.Translate(x, y, 0.0f);
+    }
+
+    public void setEnemy(Transform trans)
+    {
+        enemy = trans;
+    }
+
+
     public override void CollectObservations(VectorSensor sensor)
     {
-        //sensor.AddObservation(head.position.x);
-        //sensor.AddObservation(head.position.y);
+        //sensor.AddObservation(map.transform.localPosition);
+        //sensor.AddObservation(this.transform.localPosition);
     }
 
     public override void OnEpisodeBegin()
     {
-
+        setRandomPosition();
+        isAlive = true;
+        prevPosition = new Vector3(-99, -99, 0);
+        AddTail();
+        thread = StartCoroutine(TailDrawer());
     }
 
     public override void Heuristic(float[] actionsOut)
     {
-       // actionsOut[0] = Input.GetAxis("Horizontal");
+        float action = -Input.GetAxisRaw("Horizontal");
+
+        switch (action)
+        {
+            case 0.0f:
+                // do nothing
+                actionsOut[0] = 0.0f;
+                break;
+            case -1.0f:
+                // move left
+                actionsOut[0] = 1.0f;
+                break;
+            case 1.0f:
+                // move right
+                actionsOut[0] = 2.0f;
+                break;
+            default:
+                Debug.Log("Invalid action value");
+                break;
+        }
     }
 
     public override void OnActionReceived(float[] vectorAction)
     {
-        //direction = vectorAction[0];
-        //Debug.Log(direction);
+        SetReward(0.01f);
+        var action = Mathf.FloorToInt(vectorAction[0]);
+        switch (action)
+        {
+            case 0:
+                // do nothing
+                direction = 0;
+                break;
+            case 1:
+                // move left
+                direction = -1;
+                break;
+            case 2:
+                // move right
+                direction = 1;
+                break;
+            default:
+                Debug.Log("Invalid action value");
+                break;
+        }
     }
 
 
@@ -82,7 +169,7 @@ public class Snake : Agent
 
     void FixedUpdate()
     {
-        if (gameOver || !isReady)
+        if (!isAlive)
         {
             return;
         }
@@ -107,34 +194,13 @@ public class Snake : Agent
 
     void Update()
     {
-        if (gameOver || !isReady)
+        if (!isAlive)
         {
             return;
         }
-        PollPlayerInput();
+        //PollPlayerInput();
     }
 
-
-    public void StartSnake()
-    {        
-        transform.position = initPosition;
-        prevPosition = new Vector3(-99, -99, 0);
-        AddTail();
-        isReady = true;
-        thread = StartCoroutine(TailDrawer());       
-    }
-
-    public void ResetSnake()
-    {     
-        //Debug.Log("Tails count = " +snakeTails.Count);
-        for (int i = 0; i < snakeTails.Count; i++)
-        {
-            snakeTails[i].Destroy();
-        }
-        snakeTails.Clear();
-        snakeTails = new List<SnakeTail>();
-        StartSnake();        
-    }
 
     void AddTail()
     {
@@ -142,7 +208,7 @@ public class Snake : Agent
         
         tail.SetColor(color);
         tail.SetWidth(width);
-        tail.SetOffset((int)(width * 15));
+        tail.SetOffset((int)(width * 8));
         tail.transform.parent = map.transform; // optional, for convenience
         snakeTails.Add(tail);
         
@@ -151,12 +217,12 @@ public class Snake : Agent
 
     IEnumerator TailDrawer()
     {
-        Debug.Log("Courutine started");
+        //Debug.Log("Courutine started");
         tailActive = false;
         yield return new WaitForSeconds(shiftTime);
         tailActive = true;
 
-        while (!gameOver)
+        while (isAlive)
         {
             yield return new WaitForSeconds(Random.Range(0.1f, 7.0f));
             tailActive = false;
@@ -165,9 +231,8 @@ public class Snake : Agent
 
             if (isCollision)
             {
-                GameOver();
-                //Debug.Log("Edge case");
-                Debug.Log("Courutine aborted");
+                Death();
+                //Debug.Log("Ghost form ended inside an object! (courutine aborted)");
                 yield break;                
             }
 
@@ -176,7 +241,7 @@ public class Snake : Agent
 
             tailActive = true;     
         }
-        Debug.Log("Courutine ended");
+        //Debug.Log("Courutine ended");
     }
 
 
@@ -192,29 +257,34 @@ public class Snake : Agent
         if (tailActive)
         {
             //Debug.Log("Collision at " + other.transform.position);
-            GameOver();
+            Death();
         }
         
     }
 
 
-    void GameOver()
+    public void Teardown()
     {
-        //gameOver = true;
-        StopCoroutine(thread);        
-        isReady = false;
+        StopCoroutine(thread);
+        for (int i = 0; i < snakeTails.Count; i++)
+        {
+            snakeTails[i].Destroy();
+        }
+        snakeTails.Clear();
 
-        ResetSnake();
+        //transform.position = originalPosition;
+        //transform.rotation = originalRotation;
+    }
 
+    void Death()
+    {
+        isAlive = false;
+        map.registerDeath(snakeID);    
         //GameObject.Destroy(head.gameObject);
         //SceneManager.LoadScene(0);
     }
 
 
-    void PollPlayerInput() // This should depend on the current player controlling the snake..
-    {
-        direction = controller.Move();
-    }
 
     SnakeTail GetCurrentSnakeTail()
     {
