@@ -6,16 +6,10 @@ using Unity.MLAgents.Policies;
 
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
-
-//using UnityEngine.Serialization;
-
-//var enumModeStatus : BehaviorType.HeuristicOnly;
-
+using Unity.Barracuda; 
 
 public class Snake : Agent
 {
-
-
     float direction = 0.0f;         // user's input
     float speed = 2.0f;             // speed of snake's head
     float angularSpeed = 110.0f;    // determines the smallest circle that a snake can draw
@@ -27,7 +21,7 @@ public class Snake : Agent
     public int score = 0;
 
     bool tailActive = false;
-    bool isAlive = true;
+    public bool isAlive = true;
     bool isCollision = false;
 
     List<SnakeTail> snakeTails;
@@ -35,7 +29,7 @@ public class Snake : Agent
     Vector3 originalPosition;
     Vector3 prevPosition;
     Quaternion originalRotation;
-    Transform enemy;
+    //Transform enemy;
 
     public int snakeID;   
     private Color color;
@@ -51,14 +45,15 @@ public class Snake : Agent
 
 
     /// ML-Agents functions ///
-    
+
+    public NNModel nn;
     public override void Initialize()
     {
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
         meshFilter = gameObject.GetComponent<MeshFilter>();
         col = gameObject.GetComponent<CircleCollider2D>();
         snakeTails = new List<SnakeTail>();
-       
+
         makePolygon();       
         col.radius = width / 2.0f;
         breakTime = width * 1.5f;
@@ -95,20 +90,21 @@ public class Snake : Agent
         transform.Translate(x, y, 0.0f);
     }
 
-    public void setEnemy(Transform trans)
-    {
-        enemy = trans;
-    }
+    //public void setEnemy(Transform trans)
+    //{
+    //    enemy = trans;
+    //}
 
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        //sensor.AddObservation(map.transform.localPosition);
-        //sensor.AddObservation(this.transform.localPosition);
+        //sensor.AddObservation(transform.localPosition);
+        //sensor.AddObservation(enemy.localPosition);
     }
 
     public override void OnEpisodeBegin()
     {
+        Debug.Log("New episode!");
         setRandomPosition();
         isAlive = true;
         prevPosition = new Vector3(-99, -99, 0);
@@ -142,7 +138,14 @@ public class Snake : Agent
 
     public override void OnActionReceived(float[] vectorAction)
     {
-        SetReward(0.01f);
+        if (isAlive)
+        {
+            SetReward(0.01f); // the longer you live the better
+        }
+
+        //Debug.Log("Me = " + transform.position);
+        //Debug.Log("Enemy = " + enemy.position);
+
         var action = Mathf.FloorToInt(vectorAction[0]);
         switch (action)
         {
@@ -192,23 +195,13 @@ public class Snake : Agent
     }
 
 
-    void Update()
-    {
-        if (!isAlive)
-        {
-            return;
-        }
-        //PollPlayerInput();
-    }
-
-
     void AddTail()
     {
         SnakeTail tail = Instantiate(tailPrefab, Vector3.zero, Quaternion.identity) as SnakeTail;
         
         tail.SetColor(color);
         tail.SetWidth(width);
-        tail.SetOffset((int)(width * 8));
+        tail.SetOffset((int)(width * 7)); // was 8 
         tail.transform.parent = map.transform; // optional, for convenience
         snakeTails.Add(tail);
         

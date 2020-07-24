@@ -4,56 +4,67 @@ using System.Collections.Generic;
 
 public class AchtungArea : MonoBehaviour
 {
+    public int numPlayers = 4;
+
     public float spawnRange = 4.0f;
-    float wallRange = 10.0f;
-    float wallWidth = 0.7f;
+    float wallRange;
+    float wallWidth = 0.3f;
 
     public Walls walls;
     public Snake snakePrefab;
 
     public List<Color> colors;
-
-    Snake snakeA;
-    Snake snakeB;
+    List<Snake> snakes;
 
     // Start is called before the first frame update
     void Start()
     {
+        wallRange = numPlayers * 4.0f;
+        snakes = new List<Snake>();
         walls.SetWalls(wallRange, wallWidth);
 
-        snakeA = createSnake(0);
-        snakeB = createSnake(1);
-        
+        for (int i = 0; i < numPlayers; i++)
+        {
+            snakes.Add(createSnake(i));
+        }          
 
-        snakeA.setEnemy(snakeB.transform);
-        snakeB.setEnemy(snakeA.transform);
-
-        //Camera.main.GetComponent<CameraFollow>().setTarget(snakeA);
+        //snakes[0].SetModel("human", null);
+        //Camera.main.GetComponent<CameraFollow>().setTarget(snakes[0]);
     }
 
 
     public void registerDeath(int snakeID)
     {
-        if(snakeID == 0)
+        int numAlive = 0;
+        int lastAlive = -1;
+
+        for (int i = snakes.Count-1; i >= 0; i--)
         {
-            snakeA.SetReward(-1);
-            snakeB.SetReward(1);
-            snakeB.score++;
-            //Debug.Log("B wins!");
-        }
-        else 
-        {
-            snakeA.SetReward(1);
-            snakeB.SetReward(-1);
-            snakeA.score++;
-            //Debug.Log("A wins!");
+            if (snakes[i].isAlive)
+            {
+                numAlive++;
+                lastAlive = i;
+            }
         }
 
-        snakeA.Teardown();
-        snakeB.Teardown();
+        if (numAlive <= 1)
+        {
+            for (int i = 0; i < snakes.Count; i++)
+            {
+                if(lastAlive == i)
+                {
+                    snakes[i].SetReward(1);
+                }
+                else
+                {
+                    snakes[i].SetReward(-1);
+                }
+                snakes[i].Teardown();
+                snakes[i].EndEpisode();
+            }
+        }
 
-        snakeA.EndEpisode();
-        snakeB.EndEpisode();
+        //Camera.main.GetComponent<CameraFollow>().setTarget(snakes[lastAlive]);
     }
 
 
@@ -63,47 +74,8 @@ public class AchtungArea : MonoBehaviour
         snake.snakeID = snakeID;
         snake.map = this;
         snake.setColor(colors[snakeID]);
-        snake.transform.parent = this.transform; 
+        snake.transform.parent = this.transform;
         return snake;
     }
-
-    /// More than 2 snakes...
-
-    //List<Snake> snakes;
-    //List<bool> alive;
-
-    //public void RegisterDeth()
-    //{
-    //    alive[snakeID] = false;
-    //    snakes[snakeID].SetReward(-1);
-
-    //    int winnerID = -1;
-    //    int aliveCount = 0;
-
-    //    for (int i = 0; i < snakes.Count; i++)
-    //    {
-    //        if (alive[i])
-    //        {
-    //            aliveCount++;
-    //            winnerID = i;
-    //        }
-    //    }
-
-    //    if (aliveCount == 1)
-    //    {
-    //        snakes[winnerID].SetReward(1);
-    //    }
-    //}
-
-    //void AddSnake(int snakeID, float offsetX, float offsetY, float angle)
-    //{
-    //    Snake snake = Instantiate(snakePrefab, Vector3.zero, Quaternion.identity) as Snake;
-    //    snake.transform.Rotate(0f, 0f, angle);
-    //    snake.transform.Translate(offsetX, offsetY, 0.0f);
-    //    snake.color = snakeColors[snakeID];
-    //    snake.snakeID = snakeID;
-    //    snakes.Add(snake);
-    //    alive.Add(true);
-    //}
 
 }

@@ -21,6 +21,8 @@ public class Walls : MonoBehaviour
         float x = range;
         float y = range;
 
+        float jumpProtection = 3.0f;
+
         // Line renderer requires 3d points.
         Vector3[] points3d = new Vector3[5];
         points3d[0] = new Vector3(-x-width/2, -y, 0f);
@@ -32,6 +34,10 @@ public class Walls : MonoBehaviour
         line.SetPositions(points3d);
 
         // but edge collider requires 2d points so ...   
+
+        x += jumpProtection / 2.0f;
+        y += jumpProtection / 2.0f;
+
         Vector2[] points2d = new Vector2[5];
         points2d[0] = new Vector3(-x, -y);
         points2d[1] = new Vector3(x, -y);
@@ -42,7 +48,7 @@ public class Walls : MonoBehaviour
 
         // Is there a better way ?
 
-        edgeCollider.edgeRadius = width / 2.0f;
+        edgeCollider.edgeRadius = (width+jumpProtection) / 2.0f;
         line.startWidth = width;
         line.endWidth = width;
 

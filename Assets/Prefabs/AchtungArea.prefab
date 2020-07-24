@@ -45,14 +45,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnRange: 4
-  wallRange: 10
-  wallWidth: 0.3
   walls: {fileID: 3018335734733226982}
   snakePrefab: {fileID: 953594651409274886, guid: 3878f39d7e554f0469d76127df990e7f,
     type: 3}
   colors:
   - {r: 0, g: 1, b: 0.9357197, a: 1}
   - {r: 1, g: 0, b: 0.46135092, a: 0}
+  - {r: 0.024487615, g: 1, b: 0, a: 0}
+  - {r: 1, g: 0.8680321, b: 0, a: 0}
 --- !u!1001 &4362246091293869264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -60,6 +60,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6301179435648764298}
     m_Modifications:
+    - target: {fileID: 1543195282220255028, guid: ac9537f2edf37a54c9a9d8db2c54e845,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1543195282220255029, guid: ac9537f2edf37a54c9a9d8db2c54e845,
         type: 3}
       propertyPath: m_Name
