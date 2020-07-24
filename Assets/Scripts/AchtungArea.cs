@@ -28,7 +28,7 @@ public class AchtungArea : MonoBehaviour
             snakes.Add(createSnake(i));
         }          
 
-        //snakes[0].SetModel("human", null);
+        snakes[0].SetModel("human", null);
         //Camera.main.GetComponent<CameraFollow>().setTarget(snakes[0]);
     }
 
@@ -59,8 +59,8 @@ public class AchtungArea : MonoBehaviour
                 {
                     snakes[i].SetReward(-1);
                 }
-                snakes[i].Teardown();
-                snakes[i].EndEpisode();
+                //snakes[i].Teardown();
+                //snakes[i].EndEpisode();
             }
         }
 

@@ -178,10 +178,10 @@ MonoBehaviour:
   m_RaysPerDirection: 17
   m_MaxRayDegrees: 60
   m_SphereCastRadius: 0
-  m_RayLength: 20
+  m_RayLength: 25
   m_RayLayerMask:
     serializedVersion: 2
-    m_Bits: 1280
+    m_Bits: 256
   m_ObservationStacks: 3
   rayHitColor: {r: 0, g: 1, b: 0.9372549, a: 1}
   rayMissColor: {r: 0.13333334, g: 0.13333334, b: 0.13333334, a: 1}
