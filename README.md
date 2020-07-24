@@ -12,9 +12,9 @@ TO-DO
 * Set-up: players appear at random positions & initial direction
 * Goal: outlive all opponents.
 * Agent Reward Function:
- *+0.01 at each step
- *+1.0 To the last alive agent.
- *-1.0 To all dead agents.
+  * +0.01 at each step
+  * +1.0 To the last alive agent.
+  * -1.0 To all dead agents.
 * Behavior Parameters:
   * Vector Observation space: Size of 210, corresponding to 17 ray casts distributed over 60 degrees at max ray length 20. Stacked ray casts = 3
   * Vector Action space: (Discrete) Size of 3, corresponding to left/right/forward movement.
