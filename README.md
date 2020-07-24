@@ -16,9 +16,10 @@ TO-DO
   * +1.0 To the last alive agent.
   * -1.0 To all dead agents.
 * Behavior Parameters:
-  * Vector Observation space: Size of 210, corresponding to 17 ray casts distributed over 60 degrees at max ray length 20. Stacked ray casts = 3
+  * Vector Observation space: Size of 210, corresponding to 17 ray casts (stack of 3) distributed over 60 degrees at max ray length 20.
   * Vector Action space: (Discrete) Size of 3, corresponding to left/right/forward movement.
   * Visual Observations: None
+  
 ![Image](https://github.com/MaksymPylypenko/Achtung-die-kurve-/blob/master/dev.png)
 
 The bot is able to survive in a friendly environment. 
