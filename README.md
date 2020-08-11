@@ -31,3 +31,5 @@ However, it fails versus an aggressive opponent. In the image below you may noti
 * `AI` - pink, yellow, green
 
 ![Image](https://github.com/MaksymPylypenko/Achtung-die-kurve/blob/master/observation%201.png)
+
+Another issue is that agents can sometimes trap themselves. For instance, when a snake (e.g. pink in this case) is looking directly at the edge of the map, the longest ray is casted in the same direction, which falsley makes it think that this is the best route. This could potentially be fixed by using a longer stack of rays (acts like memory) to avoid situations that lead to inevitable death.
