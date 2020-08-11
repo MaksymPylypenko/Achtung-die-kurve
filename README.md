@@ -26,4 +26,8 @@ The bot is able to survive in a friendly environment.
 ![Image](https://github.com/MaksymPylypenko/Achtung-die-kurve/blob/master/training.png)
 
 However, it fails versus an aggressive opponent. In the image below you may notice that the agent always wants to go clockwise. This can be easily exploited and will lead to an agent's death in the long run.
+
+* `Human` - cyan
+* `AI` - pink, yellow, green
+
 ![Image](https://github.com/MaksymPylypenko/Achtung-die-kurve/blob/master/observation%201.png)
